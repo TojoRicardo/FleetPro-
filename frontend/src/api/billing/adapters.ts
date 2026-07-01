@@ -1,8 +1,7 @@
-import type { Invoice, Payment, Plan, Subscription } from '@/types';
+import type { Invoice, Payment, Subscription } from '@/types';
 import type {
   BillingInvoice,
   BillingPayment,
-  BillingPlan,
   BillingSubscription,
 } from '@/types/billing';
 
@@ -78,18 +77,5 @@ export function mapSubscription(subscription: Subscription): BillingSubscription
     current_period_end: (subscription as Subscription & { current_period_end?: string | null })
       .current_period_end ?? null,
     created_at: (subscription as Subscription & { created_at?: string }).created_at ?? new Date().toISOString(),
-  };
-}
-
-export function mapPlan(plan: Plan): BillingPlan {
-  return {
-    id: plan.id,
-    name: plan.name,
-    slug: plan.slug,
-    price_monthly: Number(plan.price_monthly ?? plan.price ?? 0),
-    price_yearly: Number(plan.price_yearly ?? 0),
-    price_per_vehicle: Number(plan.price_monthly ?? plan.price ?? 0),
-    max_vehicles: plan.max_vehicles ?? plan.vehicle_limit ?? 0,
-    is_active: true,
   };
 }

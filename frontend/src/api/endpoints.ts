@@ -60,7 +60,6 @@ export const dashboardApi = {
   getAuditLogStats: () => apiClient.get<ApiResponse<AuditLogStats>>('/audit-logs/stats').then(unwrap),
   exportAuditLogs: (params?: ListParams) =>
     apiClient.get<ApiResponse<AuditLog[]>>('/audit-logs/export', { params }).then(unwrap),
-  generateReport: () => apiClient.post('/reports/generate'),
 };
 
 export const analyticsApi = {
@@ -74,7 +73,6 @@ export const billingApi = {
   getPlans: () => apiClient.get<ApiResponse<Plan[]>>('/billing/plans').then(unwrap),
   subscribe: (data: { plan_id: number; billing_cycle?: string }) =>
     apiClient.post<ApiResponse<Subscription>>('/billing/subscribe', data).then(unwrap),
-  cancel: () => apiClient.post<ApiResponse<Subscription>>('/billing/cancel').then(unwrap),
   getRevenue: () => apiClient.get<ApiResponse<BillingRevenue>>('/billing/revenue').then(unwrap),
   getInvoices: (params?: ListParams & { status?: string }) =>
     apiClient.get<PaginatedApiResponse<Invoice>>('/billing/invoices', { params }).then(unwrapPaginated),
