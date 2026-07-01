@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String   @unique
+  email     String?
+  status    String   @default("active")
+  planId    Int?     @map("plan_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  subscriptions Subscription[]
+  invoices      Invoice[]
+  payments      Payment[]
+  vehicles      Vehicle[]
+  users         User[]
+
+  @@map("tenants")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  tenantId Int?    @map("tenant_id")
+  name     String
+  email    String  @unique
+  password String
+  role     String  @default("admin")
+  status   String  @default("active")
+
+  company Company? @relation(fields: [tenantId], references: [id])
+
+  @@map("users")
+}
+
+model Plan {
+  id              Int      @id @default(autoincrement())
+  name            String
+  slug            String   @unique
+  priceMonthly    Decimal  @default(0) @map("price_monthly") @db.Decimal(10, 2)
+  priceYearly     Decimal  @default(0) @map("price_yearly") @db.Decimal(10, 2)
+  pricePerVehicle Decimal  @default(0) @map("price_per_vehicle") @db.Decimal(10, 2)
+  price           Decimal  @default(0) @db.Decimal(10, 2)
+  maxVehicles     Int      @default(5) @map("max_vehicles")
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+model Subscription {
+  id                   Int       @id @default(autoincrement())
+  tenantId             Int       @map("tenant_id")
+  planId               Int       @map("plan_id")
+  status               String    @default("active")
+  billingCycle         String    @default("monthly") @map("billing_cycle")
+  startDate            DateTime? @map("start_date") @db.Date
+  endDate              DateTime? @map("end_date") @db.Date
+  currentPeriodStart   DateTime? @map("current_period_start")
+  currentPeriodEnd     DateTime? @map("current_period_end")
+  cancelledAt          DateTime? @map("cancelled_at")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  company  Company  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  plan     Plan     @relation(fields: [planId], references: [id])
+  invoices Invoice[]
+
+  @@index([tenantId, status])
+  @@map("subscriptions")
+}
+
+model Invoice {
+  id             Int       @id @default(autoincrement())
+  tenantId       Int       @map("tenant_id")
+  subscriptionId Int?      @map("subscription_id")
+  number         String    @unique
+  amount         Decimal   @db.Decimal(10, 2)
+  unitPrice      Decimal?  @map("unit_price") @db.Decimal(10, 2)
+  currency       String    @default("USD") @db.Char(3)
+  status         String    @default("open")
+  billingPeriod  DateTime? @map("billing_period") @db.Date
+  vehicleCount   Int       @default(0) @map("vehicle_count")
+  dueDate        DateTime? @map("due_date")
+  paidAt         DateTime? @map("paid_at")
+  lineItems      Json?     @map("line_items")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  company         Company          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  subscription    Subscription?    @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  payments        Payment[]
+  paymentAttempts PaymentAttempt[]
+
+  @@index([tenantId, status])
+  @@map("invoices")
+}
+
+model Payment {
+  id              Int      @id @default(autoincrement())
+  tenantId        Int      @map("tenant_id")
+  invoiceId       Int      @map("invoice_id")
+  amount          Decimal  @db.Decimal(10, 2)
+  currency        String   @default("USD") @db.Char(3)
+  status          String   @default("pending")
+  paymentMethod   String?  @map("payment_method")
+  idempotencyKey  String?  @map("idempotency_key")
+  metadata        Json?
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  company Company @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, status])
+  @@index([invoiceId])
+  @@map("payments")
+}
+
+model PaymentAttempt {
+  id             Int      @id @default(autoincrement())
+  tenantId       Int      @map("tenant_id")
+  invoiceId      Int      @map("invoice_id")
+  paymentId      Int?     @map("payment_id")
+  idempotencyKey String?  @map("idempotency_key")
+  paymentMethod  String?  @map("payment_method")
+  amount         Decimal  @db.Decimal(10, 2)
+  status         String
+  errorCode      String?  @map("error_code")
+  errorMessage   String?  @map("error_message")
+  ipAddress      String?  @map("ip_address")
+  userAgent      String?  @map("user_agent")
+  metadata       Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId, createdAt])
+  @@map("payment_attempts")
+}
+
+model Vehicle {
+  id       Int    @id @default(autoincrement())
+  tenantId Int?   @map("tenant_id")
+  status   String @default("active")
+
+  company Company? @relation(fields: [tenantId], references: [id])
+
+  @@map("vehicles")
+}
+
+model PersonalAccessToken {
+  id            Int       @id @default(autoincrement())
+  tokenableType String    @map("tokenable_type")
+  tokenableId   Int       @map("tokenable_id")
+  name          String
+  token         String    @unique @db.VarChar(64)
+  abilities     String?
+  expiresAt     DateTime? @map("expires_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@index([tokenableType, tokenableId])
+  @@map("personal_access_tokens")
+}
+
+model BillingJobLock {
+  id        Int      @id @default(autoincrement())
+  jobName   String   @map("job_name")
+  lockKey   String   @map("lock_key")
+  lockedAt  DateTime @map("locked_at")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([jobName, lockKey])
+  @@map("billing_job_locks")
+}
