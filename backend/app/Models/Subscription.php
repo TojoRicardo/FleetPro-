@@ -48,9 +48,4 @@ class Subscription extends Model
     {
         return $this->hasMany(Invoice::class);
     }
-
-    public function isActive(): bool
-    {
-        return in_array($this->status, ['active'], true);
-    }
 }

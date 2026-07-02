@@ -15,4 +15,4 @@ RUN composer install --no-interaction --prefer-dist
 
 EXPOSE 8000
 
-CMD php artisan migrate --force --seed && php artisan serve --host=0.0.0.0 --port=8000
+CMD sh -c "php artisan migrate --force --seed && php artisan schedule:work & exec php artisan serve --host=0.0.0.0 --port=8000"

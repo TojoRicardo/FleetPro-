@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Concerns\ResolvesPagination;
-use App\Jobs\GenerateFleetReport;
 use App\Http\Resources\AuditLogResource;
 use App\Models\AuditLog;
 use App\Repositories\Contracts\AuditLogRepositoryInterface;
@@ -94,14 +93,5 @@ class DashboardController extends Controller
         return collect($logs)
             ->map(fn (AuditLog $log) => (new AuditLogResource($log, $resolver))->resolve())
             ->all();
-    }
-
-    public function generateReport(Request $request)
-    {
-        Gate::authorize('generate-report');
-
-        GenerateFleetReport::dispatch($request->user());
-
-        return $this->success(null, 'Report generation queued. Check audit logs for completion status.');
     }
 }

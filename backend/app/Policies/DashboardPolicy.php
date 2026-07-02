@@ -17,9 +17,4 @@ class DashboardPolicy
 
         return in_array($user->role->value, ['admin', 'manager', 'mechanic'], true);
     }
-
-    public function generateReport(User $user): bool
-    {
-        return $this->canManageOperations($user);
-    }
 }

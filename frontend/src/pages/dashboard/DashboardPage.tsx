@@ -13,8 +13,8 @@ import UpgradeBanner from '@/components/ui/UpgradeBanner';
 import OnboardingTip from '@/components/ui/OnboardingTip';
 import { CardSkeleton } from '@/components/ui/Skeleton';
 import ErrorFallback from '@/components/ui/ErrorFallback';
-import { useDashboard, useBilling, useAuditLogs } from '@/hooks/useQueries';
-import { useRealtime, usePollingFallback } from '@/hooks/useRealtime';
+import { useDashboard, useSubscription, useAuditLogs } from '@/hooks/useQueries';
+import { usePollingFallback } from '@/hooks/useRealtime';
 import { useTheme } from '@/theme/useTheme';
 import { baseChartOptions, getChartColors } from '@/utils/chartTheme';
 import { formatCurrency, getPaginatedRows } from '@/utils';
@@ -22,17 +22,16 @@ import { formatCurrency, getPaginatedRows } from '@/utils';
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Filler);
 
 export default function DashboardPage() {
-  useRealtime();
   usePollingFallback(['dashboard', 'analytics', 'audit-logs'], 60000);
   const { theme } = useTheme();
 
   const { data, isLoading, isError, refetch } = useDashboard();
-  const { subscription } = useBilling();
+  const { data: subscription } = useSubscription();
   const { data: activityData, isLoading: activityLoading } = useAuditLogs({ per_page: 8, page: 1 });
 
   const stats = data?.statistics;
   const charts = data?.charts;
-  const usage = subscription.data?.usage;
+  const usage = subscription?.usage;
   const usageWarning = usage && Object.values(usage).some((u) => u.used / u.limit >= 0.8);
   const chartColors = getChartColors(theme);
   const chartOpts = baseChartOptions(theme);

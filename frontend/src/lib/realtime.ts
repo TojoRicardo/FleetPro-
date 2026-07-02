@@ -9,7 +9,6 @@ export function isRealtimeEnabled(): boolean {
 export type RealtimeSubscribeOptions = {
   tenantId?: number | string | null;
   userId?: number | string | null;
-  onEvent?: (event: string, data?: unknown) => void;
   eventHandlers?: Record<string, () => void>;
 };
 
@@ -20,7 +19,6 @@ export type RealtimeSubscribeOptions = {
 export function subscribeToRealtime({
   tenantId,
   userId,
-  onEvent,
   eventHandlers = {},
 }: RealtimeSubscribeOptions = {}): () => void {
   if (!isRealtimeEnabled()) {
@@ -48,13 +46,6 @@ export function subscribeToRealtime({
 
     Object.entries(eventHandlers).forEach(([event, handler]) => {
       socket?.on(event, handler);
-    });
-
-    socket.on('message', (data: { type?: string }) => {
-      if (data?.type && eventHandlers[data.type]) {
-        eventHandlers[data.type]();
-      }
-      if (data?.type && onEvent) onEvent(data.type, data);
     });
   } catch {
     // WebSocket unavailable — caller can fall back to polling

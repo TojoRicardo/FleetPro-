@@ -73,14 +73,6 @@ export function AuthFooterLink({ text, linkText, to }: { text: string; linkText:
   );
 }
 
-export function AuthDivider({ label }: { label: string }) {
-  return (
-    <div className="auth-divider" role="separator">
-      <span>{label}</span>
-    </div>
-  );
-}
-
 export function AuthTrustNote({ children }: { children: ReactNode }) {
   return <p className="auth-trust-note">{children}</p>;
 }

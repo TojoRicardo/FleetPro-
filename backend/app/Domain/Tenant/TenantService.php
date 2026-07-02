@@ -3,7 +3,6 @@
 namespace App\Domain\Tenant;
 
 use App\Domain\Billing\Contracts\PaymentGatewayInterface;
-use App\Domain\Feature\FeatureFlagService;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Tenant;
@@ -13,10 +12,7 @@ use Illuminate\Support\Str;
 
 class TenantService
 {
-    public function __construct(
-        private PaymentGatewayInterface $paymentGateway,
-        private FeatureFlagService $featureFlagService,
-    ) {}
+    public function __construct(private PaymentGatewayInterface $paymentGateway) {}
 
     public function create(array $data, User $owner): Tenant
     {
@@ -63,8 +59,6 @@ class TenantService
                 'role' => 'admin',
                 'status' => 'active',
             ]);
-
-            $this->featureFlagService->seedDefaults($tenant->id);
 
             return $tenant->load(['subscription.plan', 'plan']);
         });

@@ -41,37 +41,8 @@ export function usePlatformAnalytics(enabled = true) {
   });
 }
 
-export function useBilling(invoiceStatus?: string) {
-  const subscription = useQuery({ queryKey: ['billing', 'subscription'], queryFn: billingApi.getSubscription });
-  const plans = useQuery({ queryKey: ['billing', 'plans'], queryFn: billingApi.getPlans });
-  const revenue = useQuery({ queryKey: ['billing', 'revenue'], queryFn: billingApi.getRevenue });
-  const invoices = useQuery({
-    queryKey: ['billing', 'invoices', invoiceStatus ?? 'all'],
-    queryFn: () => billingApi.getInvoices({ per_page: 20, ...(invoiceStatus ? { status: invoiceStatus } : {}) }),
-  });
-  const queryClient = useQueryClient();
-  const toast = useToastStore((s) => s.addToast);
-
-  const subscribe = useMutation({
-    mutationFn: billingApi.subscribe,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['billing'] });
-      toast('success', 'Plan updated successfully!');
-    },
-    onError: (err) => toast('error', getApiErrorMessage(err)),
-  });
-
-  const payInvoice = useMutation({
-    mutationFn: ({ id, payment_method, idempotency_key }: { id: number; payment_method: string; idempotency_key?: string }) =>
-      billingApi.payInvoice(id, { payment_method, idempotency_key }),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['billing'] });
-      toast('success', data.replayed ? 'Payment already recorded.' : 'Payment completed successfully!');
-    },
-    onError: (err) => toast('error', getApiErrorMessage(err)),
-  });
-
-  return { subscription, plans, revenue, invoices, subscribe, payInvoice };
+export function useSubscription() {
+  return useQuery({ queryKey: ['billing', 'subscription'], queryFn: billingApi.getSubscription });
 }
 
 export function useNotifications() {

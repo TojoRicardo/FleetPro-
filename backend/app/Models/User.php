@@ -76,20 +76,6 @@ class User extends Authenticatable
             || ($this->attributes['is_super_admin'] ?? false);
     }
 
-    public function isActive(): bool
-    {
-        return ($this->status ?? 'active') === 'active';
-    }
-
-    public function hasPermission(string $permission): bool
-    {
-        if ($this->is_super_admin) {
-            return true;
-        }
-
-        return Permission::roleHas($this->role->value, $permission);
-    }
-
     public function isAdmin(): bool
     {
         return $this->role->isAdmin();
@@ -98,11 +84,6 @@ class User extends Authenticatable
     public function isManager(): bool
     {
         return $this->role->isManager();
-    }
-
-    public function isMechanic(): bool
-    {
-        return $this->role->isMechanic();
     }
 
     public function tokenAbilities(): array

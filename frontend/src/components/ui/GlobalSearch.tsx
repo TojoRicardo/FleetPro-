@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Search, Car, Users, Route, LayoutDashboard, X, Command,
   Plus, CreditCard, BarChart3, Wrench, Bell, ArrowRight, User,
-  Tag, FileText,
+  Tag,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -21,7 +21,7 @@ type CmdItem = {
   hint?: string;
   icon: typeof Car;
   action: () => void;
-  group: 'pages' | 'actions' | 'vehicles' | 'drivers' | 'invoices' | 'documents';
+  group: 'pages' | 'actions' | 'vehicles' | 'drivers' | 'invoices';
 };
 
 const quickActions = [
@@ -161,18 +161,7 @@ export default function GlobalSearch() {
         group: 'invoices',
         action: () => go(ROUTES.BILLING),
       });
-    });
-
-    if (q && (q.includes('doc') || q.includes('fichier') || q.includes('document'))) {
-      list.push({
-        id: 'documents-page',
-        label: 'Documents',
-        hint: 'Voir les documents',
-        icon: FileText,
-        group: 'documents',
-        action: () => go(ROUTES.VEHICLES),
       });
-    }
 
     return list;
   }, [query, vehicleResults, driverResults, invoiceResults, pages, actions]);

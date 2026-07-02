@@ -2,6 +2,9 @@
 node_modules/
 vendor/
 
+# Keep local docs out of GitHub repo landing page
+README.md
+
 # Environment (never commit secrets)
 .env
 .env.*
@@ -48,8 +51,10 @@ backend/storage/framework/views/*
 backend/database/*.sqlite
 backend/database/*.sqlite-journal
 
-# PHPUnit
+# PHPUnit / tests
 .phpunit.result.cache
+coverage/
+frontend/coverage/
 
 # Composer
 composer.phar

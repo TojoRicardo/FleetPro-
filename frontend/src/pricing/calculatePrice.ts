@@ -2,7 +2,6 @@ import {
   PLANS,
   YEARLY_DISCOUNT_PERCENT,
   type BillingCycle,
-  type PlanSlug,
   type PricingPlan,
 } from '@/pricing/plans.js';
 
@@ -13,10 +12,6 @@ export interface PriceBreakdown {
   monthlyTotal: number;
   periodTotal: number;
   billingCycle: BillingCycle;
-}
-
-export function clampVehicleCount(count: number, min: number, max: number): number {
-  return Math.min(Math.max(count, min), max);
 }
 
 export function isVehicleCountInPlanRange(plan: PricingPlan, vehicles: number): boolean {
@@ -30,7 +25,7 @@ export function resolvePlanForVehicleCount(vehicles: number): PricingPlan {
   return match ?? PLANS[PLANS.length - 1];
 }
 
-export function calculateMonthlyTotal(plan: PricingPlan, vehicles: number): number {
+function calculateMonthlyTotal(plan: PricingPlan, vehicles: number): number {
   const billableVehicles = Math.max(vehicles, 0);
   const baseAmount = plan.basePriceMonthly;
   const vehicleAmount = billableVehicles * plan.perVehiclePrice;
@@ -44,7 +39,7 @@ export function getDisplayBasePrice(plan: PricingPlan, billingCycle: BillingCycl
   return plan.basePriceMonthly;
 }
 
-export function applyBillingCycle(monthlyTotal: number, billingCycle: BillingCycle): number {
+function applyBillingCycle(monthlyTotal: number, billingCycle: BillingCycle): number {
   if (billingCycle === 'yearly') {
     const yearlyBeforeDiscount = monthlyTotal * 12;
     const discount = yearlyBeforeDiscount * (YEARLY_DISCOUNT_PERCENT / 100);
@@ -77,14 +72,6 @@ export function calculatePriceBreakdown(
 export function getPlanExampleMonthlyTotal(plan: PricingPlan): number | null {
   if (plan.exampleVehicles == null) return null;
   return calculateMonthlyTotal(plan, plan.exampleVehicles);
-}
-
-export function formatPlanVehicleRange(plan: PricingPlan): string {
-  return plan.vehicleRange;
-}
-
-export function getPlanById(planId: PlanSlug): PricingPlan | undefined {
-  return PLANS.find((plan) => plan.id === planId);
 }
 
 /** Default fleet size when selecting a plan from the pricing cards. */

@@ -14,7 +14,7 @@ interface AuthState {
   isSuperAdmin: () => boolean;
 }
 
-export function resetAllClientData(): void {
+function resetAllClientData(): void {
   clearAppData();
   useAuthStore.setState({ user: null, token: null, isAuthenticated: false });
   useTenantStore.setState({ tenant: null, selectedTenantId: null });

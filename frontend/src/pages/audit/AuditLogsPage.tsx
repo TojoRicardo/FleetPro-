@@ -6,7 +6,7 @@ import AuditFilters, { emptyAuditFilters, type AuditFiltersState } from '@/compo
 import AuditLogTable from '@/components/audit/AuditLogTable';
 import { AuditDiffPanel } from '@/components/audit/AuditChangesPreview';
 import { useInfiniteAuditLogs, useAuditLogStats, useExportAuditLogs } from '@/hooks/useQueries';
-import { usePollingFallback, useRealtime } from '@/hooks/useRealtime';
+import { usePollingFallback } from '@/hooks/useRealtime';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useToastStore } from '@/store';
 import type { AuditLog } from '@/types';
@@ -22,7 +22,6 @@ import { formatDateTime } from '@/utils';
 const PER_PAGE = 20;
 
 export default function AuditLogsPage() {
-  useRealtime();
   usePollingFallback(['audit-logs'], 60000);
 
   const [filters, setFilters] = useState<AuditFiltersState>(emptyAuditFilters);

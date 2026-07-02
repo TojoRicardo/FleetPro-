@@ -4,16 +4,13 @@ use App\Http\Controllers\Api\AssignmentController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BillingController;
 use App\Http\Controllers\Api\DashboardController;
-use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\DriverController;
-use App\Http\Controllers\Api\ImportExportController;
 use App\Http\Controllers\Api\LookupController;
 use App\Http\Controllers\Api\MaintenanceController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SaaSAnalyticsController;
 use App\Http\Controllers\Api\SuperAdminController;
-use App\Http\Controllers\Api\GovernanceController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\StripeWebhookController;
 use App\Http\Controllers\Api\TripController;
@@ -43,8 +40,6 @@ Route::prefix('v1')->middleware(['force.json', 'security.headers', 'request.log'
             Route::get('/sessions', [ProfileController::class, 'sessions']);
             Route::get('/activity', [ProfileController::class, 'activity']);
             Route::delete('/sessions/{tokenId}', [ProfileController::class, 'revokeSession']);
-            Route::get('/export', [GovernanceController::class, 'exportData']);
-            Route::post('/delete-account', [GovernanceController::class, 'deleteAccount']);
         });
 
         // Super admin routes (no tenant scope required)
@@ -65,7 +60,6 @@ Route::prefix('v1')->middleware(['force.json', 'security.headers', 'request.log'
             Route::get('/audit-logs', [DashboardController::class, 'auditLogs'])->middleware('role:admin,manager');
             Route::get('/audit-logs/stats', [DashboardController::class, 'auditLogStats'])->middleware('role:admin,manager');
             Route::get('/audit-logs/export', [DashboardController::class, 'exportAuditLogs'])->middleware('role:admin,manager');
-            Route::post('/reports/generate', [DashboardController::class, 'generateReport'])->middleware('role:admin,manager');
 
             Route::get('/lookups/vehicles', [LookupController::class, 'vehicles']);
             Route::get('/lookups/drivers', [LookupController::class, 'drivers']);
@@ -86,18 +80,6 @@ Route::prefix('v1')->middleware(['force.json', 'security.headers', 'request.log'
                 Route::get('/invoices', [BillingController::class, 'invoices']);
                 Route::get('/invoices/{invoice}', [BillingController::class, 'showInvoice']);
                 Route::post('/invoices/{invoice}/pay', [BillingController::class, 'payInvoice'])->middleware('role:admin');
-            });
-
-            // Documents
-            Route::apiResource('documents', DocumentController::class)->except(['update']);
-
-            // Import / Export
-            Route::prefix('import-export')->group(function () {
-                Route::post('/vehicles/import', [ImportExportController::class, 'importVehicles'])->middleware('role:admin,manager');
-                Route::post('/drivers/import', [ImportExportController::class, 'importDrivers'])->middleware('role:admin,manager');
-                Route::get('/vehicles/export', [ImportExportController::class, 'exportVehicles'])->middleware('role:admin,manager');
-                Route::get('/drivers/export', [ImportExportController::class, 'exportDrivers'])->middleware('role:admin,manager');
-                Route::post('/reports/pdf', [ImportExportController::class, 'generatePdfReport'])->middleware('role:admin,manager');
             });
 
             Route::apiResource('vehicles', VehicleController::class)

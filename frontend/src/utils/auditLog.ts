@@ -24,12 +24,6 @@ export const RESULT_LABELS: Record<string, string> = {
   partial: 'Partiel',
 };
 
-export const RESULT_COLORS: Record<string, string> = {
-  success: 'bg-emerald-500/15 text-emerald-700 ring-emerald-500/25',
-  failed: 'bg-red-500/15 text-red-700 ring-red-500/25',
-  partial: 'bg-amber-500/15 text-amber-700 ring-amber-500/25',
-};
-
 export const ROLE_LABELS: Record<string, string> = {
   super_admin: 'Super administrateur',
   admin: 'Administrateur',

@@ -35,8 +35,6 @@ assertProductionEnv();
 assertLocalDevUrls();
 
 export const env = {
-  isDev: import.meta.env.DEV,
-  isProd: import.meta.env.PROD,
   apiUrl: readEnv('VITE_API_URL') ?? '/api/v1',
   wsUrl: readEnv('VITE_WS_URL') ?? '',
   enableWs: readEnv('VITE_ENABLE_WS') === 'true',

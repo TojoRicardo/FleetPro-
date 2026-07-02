@@ -12,7 +12,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useConfirmDialog } from '@/hooks/useConfirmDialog';
 import { useTrips, useTripMutations, useLookups } from '@/hooks/useQueries';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
-import { useRealtime } from '@/hooks/useRealtime';
 import { DEFAULT_PAGE_SIZE, formatCurrency, getPaginatedMeta, getPaginatedRows } from '@/utils';
 import { cn } from '@/utils';
 import type { Trip } from '@/types';
@@ -48,7 +47,6 @@ function TripTimeline({ status }: { status: Trip['status'] }) {
 }
 
 export default function TripsPage() {
-  useRealtime();
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({ search: '', status: '' });
   const debouncedSearch = useDebouncedValue(filters.search);

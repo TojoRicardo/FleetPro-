@@ -111,7 +111,6 @@ function createCrudApi<T>(path: string) {
   return {
     getAll: (params?: ListParams) =>
       apiClient.get<PaginatedApiResponse<T>>(path, { params }).then(unwrapPaginated),
-    getById: (id: number) => apiClient.get<ApiResponse<T>>(`${path}/${id}`).then(unwrap),
     create: (data: Partial<T>) => apiClient.post<ApiResponse<T>>(path, data).then(unwrap),
     update: (id: number, data: Partial<T>) => apiClient.put<ApiResponse<T>>(`${path}/${id}`, data).then(unwrap),
     delete: (id: number) => apiClient.delete(`${path}/${id}`),

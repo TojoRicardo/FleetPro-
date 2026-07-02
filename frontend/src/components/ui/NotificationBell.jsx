@@ -1,17 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Bell, X, CheckCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import {
-  getNotifications,
-  getUnreadCount,
-  markAllAsRead,
-  markAsRead,
-  subscribeToNotifications,
-} from '@/services/notificationService';
-import { useAuth } from '@/hooks/useAuth';
-import { useTenantStore } from '@/store';
-import { getApiErrorMessage } from '@/utils';
+import { useNotifications } from '@/hooks/useQueries';
+import { getPaginatedRows, getApiErrorMessage } from '@/utils';
 import NotificationList from '@/components/notifications/NotificationList';
 import NotificationDetailModal from '@/components/notifications/NotificationDetailModal';
 import Portal from '@/components/ui/Portal';
@@ -20,69 +12,25 @@ import { TOPBAR_COPY } from '@/i18n/fr';
 
 export default function NotificationBell() {
   const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [markingAll, setMarkingAll] = useState(false);
   const [markingId, setMarkingId] = useState(null);
   const [selectedNotification, setSelectedNotification] = useState(null);
-  const mountedRef = useRef(true);
+  const [actionError, setActionError] = useState(null);
 
-  const { user, token } = useAuth();
-  const tenant = useTenantStore((s) => s.tenant);
+  const { list, unread, markAllRead, markAsRead } = useNotifications();
+  const notifications = getPaginatedRows(list.data);
+  const unreadCount = unread.data?.count ?? 0;
+  const loading = list.isLoading;
+  const error = list.error
+    ? getApiErrorMessage(list.error, TOPBAR_COPY.notifications.loadError)
+    : actionError;
+
   const location = useLocation();
 
   useEffect(() => {
     setOpen(false);
     setSelectedNotification(null);
   }, [location.pathname]);
-
-  const refresh = useCallback(async () => {
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-    try {
-      const [listResult, unreadResult] = await Promise.all([
-        getNotifications({ per_page: 20 }),
-        getUnreadCount(),
-      ]);
-
-      if (!mountedRef.current) return;
-
-      setNotifications(Array.isArray(listResult?.data) ? listResult.data : []);
-      setUnreadCount(unreadResult?.count ?? 0);
-      setError(null);
-    } catch (err) {
-      if (!mountedRef.current) return;
-      setError(getApiErrorMessage(err, TOPBAR_COPY.notifications.loadError));
-      setNotifications([]);
-    } finally {
-      if (mountedRef.current) setLoading(false);
-    }
-  }, [token]);
-
-  useEffect(() => {
-    if (!token) return undefined;
-
-    mountedRef.current = true;
-    refresh();
-
-    const unsubscribe = subscribeToNotifications({
-      tenantId: tenant?.id,
-      userId: user?.id,
-      onNotification: refresh,
-    });
-
-    const pollId = setInterval(refresh, 30000);
-
-    return () => {
-      mountedRef.current = false;
-      unsubscribe?.();
-      clearInterval(pollId);
-    };
-  }, [refresh, tenant?.id, user?.id, token]);
 
   useScrollLock(open && !selectedNotification);
 
@@ -95,19 +43,13 @@ export default function NotificationBell() {
     return () => document.removeEventListener('keydown', handler);
   }, [open, selectedNotification]);
 
-  useEffect(() => {
-    if (open && token) {
-      refresh();
-    }
-  }, [open, token, refresh]);
-
   const handleMarkAllRead = async () => {
     setMarkingAll(true);
+    setActionError(null);
     try {
-      await markAllAsRead();
-      await refresh();
+      await markAllRead.mutateAsync();
     } catch (err) {
-      setError(getApiErrorMessage(err, TOPBAR_COPY.notifications.markError));
+      setActionError(getApiErrorMessage(err, TOPBAR_COPY.notifications.markError));
     } finally {
       setMarkingAll(false);
     }
@@ -115,14 +57,14 @@ export default function NotificationBell() {
 
   const handleMarkRead = async (id) => {
     setMarkingId(id);
+    setActionError(null);
     try {
-      await markAsRead(id);
-      await refresh();
+      await markAsRead.mutateAsync(id);
       setSelectedNotification((current) =>
         current?.id === id ? { ...current, read_at: new Date().toISOString() } : current,
       );
     } catch (err) {
-      setError(getApiErrorMessage(err, TOPBAR_COPY.notifications.markError));
+      setActionError(getApiErrorMessage(err, TOPBAR_COPY.notifications.markError));
     } finally {
       setMarkingId(null);
     }

@@ -60,24 +60,4 @@ class Tenant extends Model
     {
         return $this->hasMany(Invoice::class);
     }
-
-    public function documents(): HasMany
-    {
-        return $this->hasMany(Document::class);
-    }
-
-    public function featureFlags(): HasMany
-    {
-        return $this->hasMany(FeatureFlag::class);
-    }
-
-    public function analyticsEvents(): HasMany
-    {
-        return $this->hasMany(AnalyticsEvent::class);
-    }
-
-    public function isActive(): bool
-    {
-        return in_array($this->status, ['active', 'trial'], true);
-    }
 }

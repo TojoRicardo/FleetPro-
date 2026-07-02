@@ -26,4 +26,3 @@ export const CALCULATOR_MAX_VEHICLES: number;
 export const DEFAULT_BILLING_CYCLE: BillingCycle;
 export const DEFAULT_VEHICLE_COUNT: number;
 export const PLANS: PricingPlan[];
-export const PLANS_BY_ID: Record<PlanSlug, PricingPlan>;

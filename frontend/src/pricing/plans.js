@@ -145,6 +145,3 @@ export const PLANS = [
     ctaLabel: 'Contacter l’équipe commerciale',
   },
 ];
-
-/** @type {Record<PlanSlug, PricingPlan>} */
-export const PLANS_BY_ID = Object.fromEntries(PLANS.map((plan) => [plan.id, plan]));

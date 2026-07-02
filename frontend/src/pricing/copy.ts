@@ -44,5 +44,3 @@ export const PRICING_COPY = {
     year: 'an',
   },
 } as const;
-
-export type PricingCopy = typeof PRICING_COPY;

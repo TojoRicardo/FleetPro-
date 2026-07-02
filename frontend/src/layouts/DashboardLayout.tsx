@@ -19,6 +19,7 @@ import PageLoader from '@/components/ui/PageLoader';
 import SkipToContent from '@/components/ui/SkipToContent';
 import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import { useRouteHeader } from '@/hooks/useRouteHeader';
+import { useRealtime } from '@/hooks/useRealtime';
 import { cn } from '@/utils';
 
 const NAV_ICON_MAP: Record<AppRoutePath, typeof LayoutDashboard> = {
@@ -233,6 +234,7 @@ export function Topbar({ title, subtitle, showLive }: TopbarProps) {
 }
 
 export default function DashboardLayout() {
+  useRealtime();
   const sidebarCollapsed = useUIStore((s) => s.sidebarCollapsed);
   const header = useRouteHeader();
 

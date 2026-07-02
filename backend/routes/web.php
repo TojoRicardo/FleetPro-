@@ -1,7 +1,5 @@
 <?php
 
-use App\Domain\Document\DocumentService;
-use App\Models\Document;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,7 +9,3 @@ Route::get('/', function () {
         'status' => 'running',
     ]);
 });
-
-Route::get('/documents/{document}/download', function (Document $document) {
-    return app(DocumentService::class)->download($document);
-})->middleware('signed')->name('documents.download');

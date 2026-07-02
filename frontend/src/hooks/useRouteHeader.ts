@@ -1,5 +1,5 @@
 import { useMatches } from 'react-router-dom';
-import type { RouteHandle } from '@/routes/handles';
+import type { RouteHandle } from '@/routes/constants';
 
 export function useRouteHeader(): RouteHandle {
   const matches = useMatches();

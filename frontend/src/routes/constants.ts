@@ -109,22 +109,6 @@ export const SEARCH_ROUTES: SearchRouteItem[] = [
 
 export const GUEST_PATHS = [ROUTES.LOGIN, ROUTES.REGISTER] as const;
 
-export function getRouteAccess(path: AppRoutePath): RouteAccess | undefined {
-  return ROUTE_ACCESS[path as keyof typeof ROUTE_ACCESS];
-}
-
-export function canAccessRoute(
-  path: AppRoutePath,
-  hasRole: (...roles: string[]) => boolean,
-  isSuperAdmin: () => boolean,
-): boolean {
-  const access = getRouteAccess(path);
-  if (!access) return true;
-  if (access.superAdmin) return isSuperAdmin();
-  if (access.roles) return access.roles.some((role) => hasRole(role));
-  return true;
-}
-
 export function filterNavItems(
   items: NavRouteItem[],
   hasRole: (...roles: string[]) => boolean,

@@ -10,11 +10,6 @@ enum UserRole: string
     case Mechanic = 'mechanic';
     case Driver = 'driver';
 
-    public function isSuperAdmin(): bool
-    {
-        return $this === self::SuperAdmin;
-    }
-
     public function isAdmin(): bool
     {
         return in_array($this, [self::SuperAdmin, self::Admin], true);
@@ -50,10 +45,5 @@ enum UserRole: string
                 'trips:read',
             ],
         };
-    }
-
-    public static function assignableOnRegistration(): array
-    {
-        return [self::Manager->value, self::Mechanic->value, self::Driver->value];
     }
 }

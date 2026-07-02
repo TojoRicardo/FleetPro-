@@ -5,7 +5,7 @@ import type {
   BillingSubscription,
 } from '@/types/billing';
 
-export function mapInvoiceStatus(status: Invoice['status']): BillingInvoice['status'] {
+function mapInvoiceStatus(status: Invoice['status']): BillingInvoice['status'] {
   if (status === 'open' || status === 'draft' || status === 'unpaid') return 'pending';
   if (status === 'paid' || status === 'overdue' || status === 'void') return status;
   return 'pending';

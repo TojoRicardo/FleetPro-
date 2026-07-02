@@ -7,7 +7,6 @@ use App\Models\AuditLog;
 use App\Models\Driver;
 use App\Models\Maintenance;
 use App\Models\Trip;
-use App\Models\User;
 use App\Models\Vehicle;
 use App\Policies\AssignmentPolicy;
 use App\Policies\AuditLogPolicy;
@@ -33,10 +32,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('view-dashboard', [DashboardPolicy::class, 'viewStatistics']);
-        Gate::define('generate-report', [DashboardPolicy::class, 'generateReport']);
-
-        Gate::define('admin', fn (User $user) => $user->isAdmin());
-        Gate::define('manager', fn (User $user) => $user->isManager());
-        Gate::define('mechanic', fn (User $user) => $user->role === \App\Enums\UserRole::Mechanic);
     }
 }

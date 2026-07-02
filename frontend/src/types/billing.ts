@@ -93,15 +93,4 @@ export interface BillingSubscriptionCreateResult {
   requires_payment: boolean;
 }
 
-export interface BillingPlan {
-  id: number;
-  name: string;
-  slug: string;
-  price_monthly: number;
-  price_yearly: number;
-  price_per_vehicle: number;
-  max_vehicles: number;
-  is_active: boolean;
-}
-
 export type InvoiceStatusFilter = 'all' | 'pending' | 'paid' | 'overdue';

@@ -14,9 +14,4 @@ return [
     'dashboard' => [
         'cache_ttl' => (int) env('DASHBOARD_CACHE_TTL', 60),
     ],
-
-    'realtime' => [
-        'broadcast_url' => env('REALTIME_BROADCAST_URL'),
-        'internal_secret' => env('REALTIME_INTERNAL_SECRET'),
-    ],
 ];
