@@ -1,7 +1,7 @@
 import type { AxiosError } from 'axios';
 import type { ApiResponse } from '@/types';
 
-export type ApiErrorPayload = {
+type ApiErrorPayload = {
   message: string;
   code?: string;
   errors?: Record<string, string[]>;
@@ -31,5 +31,4 @@ export function parseApiError(error: unknown, fallback = 'Something went wrong.'
 export function trackApiError(error: unknown, context?: string): void {
   const parsed = parseApiError(error);
   console.error('[API Error]', context ?? 'request', parsed);
-  window.dispatchEvent(new CustomEvent('fleetpro:api-error', { detail: { ...parsed, context } }));
 }

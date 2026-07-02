@@ -77,7 +77,6 @@ interface UIState {
   sidebarCollapsed: boolean;
   dismissedTips: string[];
   toggleSidebar: () => void;
-  setSidebarCollapsed: (v: boolean) => void;
   dismissTip: (id: string) => void;
 }
 
@@ -87,7 +86,6 @@ export const useUIStore = create<UIState>()(
       sidebarCollapsed: false,
       dismissedTips: [],
       toggleSidebar: () => set({ sidebarCollapsed: !get().sidebarCollapsed }),
-      setSidebarCollapsed: (v) => set({ sidebarCollapsed: v }),
       dismissTip: (id) => set({ dismissedTips: [...get().dismissedTips, id] }),
     }),
     { name: 'fleetpro-ui', partialize: (s) => ({ sidebarCollapsed: s.sidebarCollapsed, dismissedTips: s.dismissedTips }) }

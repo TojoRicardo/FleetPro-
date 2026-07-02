@@ -1,17 +1,17 @@
 const LOCALHOST_ORIGIN_RE = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
 
-export const DEFAULT_DEV_ORIGINS = [
+const DEFAULT_DEV_ORIGINS = [
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   'http://localhost:3000',
   'http://127.0.0.1:3000',
 ];
 
-export function isLocalhostOrigin(origin) {
+function isLocalhostOrigin(origin) {
   return typeof origin === 'string' && LOCALHOST_ORIGIN_RE.test(origin);
 }
 
-export function filterLocalhostOrigins(origins) {
+function filterLocalhostOrigins(origins) {
   return origins.filter(isLocalhostOrigin);
 }
 

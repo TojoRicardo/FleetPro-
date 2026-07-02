@@ -9,7 +9,7 @@ const LEGACY_PLAN_SLUGS: Partial<Record<PlanSlug, string>> = {
   business: 'pro',
 };
 
-export interface CreatePricingSubscriptionPayload {
+interface CreatePricingSubscriptionPayload {
   plan: PlanSlug;
   vehicles: number;
   billing_cycle?: BillingCycle;

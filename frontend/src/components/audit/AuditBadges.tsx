@@ -1,7 +1,7 @@
 import { cn } from '@/utils';
 import { ACTION_LABELS, ACTION_COLORS, ROLE_LABELS } from '@/utils/auditLog';
 
-export function AuditActionBadge({ action }: { action: string }) {
+function AuditActionBadge({ action }: { action: string }) {
   const label = ACTION_LABELS[action] ?? action;
   const color = ACTION_COLORS[action] ?? 'bg-slate-500/15 text-slate-700 ring-slate-500/20';
 

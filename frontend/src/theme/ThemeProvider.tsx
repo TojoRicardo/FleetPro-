@@ -2,7 +2,7 @@ import { createContext, useCallback, useEffect, useMemo, useState, type ReactNod
 import { applyTheme } from './applyTheme';
 import { getInitialTheme, getSystemTheme, type Theme } from './theme';
 
-export interface ThemeContextValue {
+interface ThemeContextValue {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;

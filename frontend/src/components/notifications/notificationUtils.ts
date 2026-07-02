@@ -12,7 +12,7 @@ import { TOPBAR_COPY } from '@/i18n/fr';
 import { formatDateTime } from '@/utils';
 import type { AppNotification } from '@/types';
 
-export interface NotificationVisual {
+interface NotificationVisual {
   icon: LucideIcon;
   label: string;
   iconClass: string;

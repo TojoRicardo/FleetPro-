@@ -23,7 +23,6 @@ import { useRealtime } from '@/hooks/useRealtime';
 import { cn } from '@/utils';
 
 const NAV_ICON_MAP: Record<AppRoutePath, typeof LayoutDashboard> = {
-  '/': LayoutDashboard,
   '/login': LayoutDashboard,
   '/register': LayoutDashboard,
   '/dashboard': LayoutDashboard,

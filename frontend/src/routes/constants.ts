@@ -1,7 +1,6 @@
 import type { UserRole } from '@/types';
 
 export const ROUTES = {
-  ROOT: '/',
   LOGIN: '/login',
   REGISTER: '/register',
   DASHBOARD: '/dashboard',

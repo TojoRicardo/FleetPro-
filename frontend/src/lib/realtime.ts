@@ -6,7 +6,7 @@ export function isRealtimeEnabled(): boolean {
   return env.enableWs && env.wsUrl.length > 0;
 }
 
-export type RealtimeSubscribeOptions = {
+type RealtimeSubscribeOptions = {
   tenantId?: number | string | null;
   userId?: number | string | null;
   eventHandlers?: Record<string, () => void>;

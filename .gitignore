@@ -16,8 +16,10 @@ README.md
 # Build
 dist/
 build/
+*.tsbuildinfo
 frontend/dist/
 frontend/tsconfig.tsbuildinfo
+realtime/node_modules/
 backend/public/hot
 backend/public/storage
 backend/storage/app/public/avatars/
@@ -35,7 +37,6 @@ backend/storage/*.key
 Thumbs.db
 
 # Logs
-logs/
 *.log
 backend/storage/logs/*
 !backend/storage/logs/.gitignore
