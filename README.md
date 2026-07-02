@@ -117,9 +117,3 @@ En production, planifiez le scheduler Laravel : `* * * * * php artisan schedule:
 | Base de données inaccessible | `php artisan db:show` — vérifier `backend/.env` |
 | Erreurs CORS / auth | Aligner l'URL frontend avec `CORS_ALLOWED_ORIGINS` dans `backend/.env` |
 | Temps réel inactif | Démarrer `realtime/` ou activer `VITE_ENABLE_WS=true` dans `frontend/.env` |
-
----
-
-## Licence
-
-MIT
