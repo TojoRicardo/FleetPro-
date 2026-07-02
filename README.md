@@ -23,8 +23,8 @@ FleetPro est une application full-stack conçue pour les organisations qui gère
 |--------|--------------|
 | Frontend | React 18, TypeScript, Vite, Tailwind CSS, TanStack Query |
 | Backend | Laravel 11, PHP 8.2+, Sanctum, PostgreSQL / SQLite |
-| Temps réel | Socket.IO (`realtime/`) |
-| Infra | Docker Compose, GitHub Actions (CI) |
+| Temps réel | Socket.IO ([`realtime/`](realtime/)) |
+| Infra | Docker Compose, [GitHub Actions](.github/workflows/ci.yml) |
 
 ---
 
@@ -32,11 +32,13 @@ FleetPro est une application full-stack conçue pour les organisations qui gère
 
 ```
 FleetPro/
-├── frontend/     # Application React (port 5173)
-├── backend/      # API REST Laravel (port 9000)
-├── realtime/     # Serveur WebSocket (port 6001)
+├── frontend/     → Application React (port 5173)
+├── backend/      → API REST Laravel (port 9000)
+├── realtime/     → Serveur WebSocket (port 6001)
 └── docker-compose.yml
 ```
+
+Dossiers : [`frontend/`](frontend/) · [`backend/`](backend/) · [`realtime/`](realtime/)
 
 ---
 
@@ -71,11 +73,11 @@ npm run dev
 
 | Service | URL |
 |---------|-----|
-| Application | http://localhost:5173 |
-| API | http://localhost:9000/api/v1 |
-| Health check | http://localhost:9000/api/v1/health/ready |
+| Application | [localhost:5173](http://localhost:5173) |
+| API | [localhost:9000/api/v1](http://localhost:9000/api/v1) |
+| Health check | [localhost:9000/api/v1/health/ready](http://localhost:9000/api/v1/health/ready) |
 
-> Créez un compte sur `/register` lors de la première utilisation.
+> Créez un compte sur [localhost:5173/register](http://localhost:5173/register) lors de la première utilisation.
 
 ### Docker
 
@@ -88,9 +90,9 @@ docker compose up --build
 
 ## Configuration
 
-Copiez les fichiers `.env.example` vers `.env` dans `backend/` et `frontend/`. Les valeurs par défaut suffisent pour le développement local.
+Copiez les fichiers [`.env.example`](backend/.env.example) vers `.env` dans [`backend/`](backend/) et [`frontend/`](frontend/). Les valeurs par défaut suffisent pour le développement local.
 
-Les options avancées (facturation Stripe, WebSocket, CORS) sont documentées en commentaires dans chaque fichier `.env.example`.
+Les options avancées (facturation Stripe, WebSocket, CORS) sont documentées en commentaires dans chaque fichier `.env.example` ([backend](backend/.env.example), [frontend](frontend/.env.example), [docker](.env.docker.example)).
 
 ---
 
@@ -113,7 +115,7 @@ En production, planifiez le scheduler Laravel : `* * * * * php artisan schedule:
 
 | Symptôme | Solution |
 |----------|----------|
-| Erreur 503 au démarrage | `php artisan env:validate` — consulter `backend/storage/logs/` |
-| Base de données inaccessible | `php artisan db:show` — vérifier `backend/.env` |
-| Erreurs CORS / auth | Aligner l'URL frontend avec `CORS_ALLOWED_ORIGINS` dans `backend/.env` |
-| Temps réel inactif | Démarrer `realtime/` ou activer `VITE_ENABLE_WS=true` dans `frontend/.env` |
+| Erreur 503 au démarrage | `php artisan env:validate` — consulter [`backend/storage/logs/`](backend/storage/logs/) |
+| Base de données inaccessible | `php artisan db:show` — vérifier [`backend/.env`](backend/.env.example) |
+| Erreurs CORS / auth | Aligner l'URL frontend avec `CORS_ALLOWED_ORIGINS` dans [`backend/.env`](backend/.env.example) |
+| Temps réel inactif | Démarrer [`realtime/`](realtime/) ou activer `VITE_ENABLE_WS=true` dans [`frontend/.env`](frontend/.env.example) |
