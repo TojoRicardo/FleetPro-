@@ -2,9 +2,6 @@
 node_modules/
 vendor/
 
-# Keep local docs out of GitHub repo landing page
-README.md
-
 # Environment (never commit secrets)
 .env
 .env.*
